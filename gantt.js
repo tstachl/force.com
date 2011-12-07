@@ -245,7 +245,7 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		this.showMask();
 		var c = "WHERE ActivityDate=" + Force.formatDate(this.date, "Y-m-d") + " AND (";
 		this.store.each(function(d) {
-			c += "WhatId='" + d.get("Id") + "' OR "
+			c += "WhoId='" + d.get("PersonContactId") + "' OR "
 		});
 		c = c.substr(0, c.length - 4) + ") AND IsPrivate=false AND IsDeleted=false";
 		this.eventStore = new Force.data.Store({
@@ -265,9 +265,9 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 	},
 	createEvent : function(c) {
 		if(Date.parseDate(c.get("StartDateTime"), Force.serverDateFormat) < this.endTime) {
-			var d = this.store.indexOfId(c.get("WhatId")),
+			var d = this.store.indexOfId(c.get("WhoId")),
 			    e = Ext.get(this.getView().getRow(d));
-			console.log(d, e, c.get("WhatId"));
+			console.log(d, e, c.get("WhoId"));
 			var a = e.getHeight(),
 			    e = "-" + e.getHeight() + "px",
 			    k = Ext.get(this.getView().getCell(d,0)).getComputedWidth(),
