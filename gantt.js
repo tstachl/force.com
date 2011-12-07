@@ -336,7 +336,6 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		});
 		var specialty = new Ext.form.ComboBox({
 			typeAhead: true,
-			triggerAction: 'all',
 			lazyRender: true,
 			mode: 'local',
 			emptyText: 'Specialty',
@@ -350,6 +349,19 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 					this.userQueryClause();
 				}
 			}
+		});
+		
+		var locations = new Ext.form.ComboBox({
+			typeAhead: true,
+			lazyRender: true,
+			mode: 'local',
+			emptyText: 'Location',
+			store: new Force.data.Store({
+				object: 'Location__c',
+				fields: ['Id', 'Name']
+			}),
+			valueField: 'Id',
+			displayField: 'Name'
 		});
 		
 		var date = new Ext.form.DateField({
@@ -396,7 +408,7 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		});
 		
 		this.add(new Ext.Toolbar({
-			items: [specialty, '->', date, startTime, endTime]
+			items: [specialty, locations, '->', date, startTime, endTime]
 		}));
 		this.doLayout();
 	},
