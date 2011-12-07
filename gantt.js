@@ -142,9 +142,6 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		else
 			this.date = s;
 	},
-	setSpecialty: function(s) {
-		this.specialty = s;
-	},
 	onRender : function() {Force.cmp.GanttPanel.superclass.onRender.apply(this, arguments);
 		this.getGridEl();
 		this.el.addClass("force-gantt-panel");
@@ -325,6 +322,9 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		if (this.specialty) {
 			clause += " AND Specialities__pc includes ('" + this.specialty + "')";
 		}
+		if (this.location) {
+			clause += " AND PersonContactId IN (SELECT Contact__c FROM DoctorLocationAssociation__c WHERE Location__c = '" + this.location + "')"; 
+		}
 		this.store.clause = clause;
 		this.store.load();
 	},
@@ -350,8 +350,8 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 			displayField: 'label',
 			listeners: {
 				scope: this,
-				select: function(field, data) {
-					this.setSpecialty(data.get('value'));
+				select: function(cb, data) {
+					this.specialty = data.get('value');
 					this.userQueryClause();
 				}
 			}
@@ -364,7 +364,14 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 			emptyText: 'Location',
 			store: this.locationStore,
 			valueField: 'Id',
-			displayField: 'Name'
+			displayField: 'Name',
+			listeners: {
+				scope: this,
+				select: function(cb, data) {
+					this.location = data.get('Id');
+					this.userQueryClause();
+				}
+			}
 		});
 		
 		var date = new Ext.form.DateField({
