@@ -425,11 +425,11 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 			items: ['->', date, startTime, endTime]
 		});
 		
+		if (this.showLocations) {
+			this.tbar.insert(0, locations);
+		}
 		if (this.showSpecialty) {
 			this.tbar.insert(0, specialty);
-		}
-		if (this.showLocations) {
-			this.tbar.insert(1, locations);
 		}
 		
 		this.add(this.tbar);
