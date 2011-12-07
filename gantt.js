@@ -359,6 +359,8 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		
 		var locations = new Ext.form.ComboBox({
 			typeAhead: true,
+			lazyRender: true,
+			triggerAction: 'all',
 			emptyText: 'Location',
 			store: this.locationStore,
 			valueField: 'Id',
