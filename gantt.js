@@ -302,6 +302,23 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		return c;
 	},
 	createToolbar: function() {
+		var speciality = new Ext.form.ComboBox({
+			typeAhead: true,
+			triggerAction: 'all',
+			lazyRender: true,
+			mode: 'local',
+			store: new Ext.data.ArrayStore({
+				id: 0,
+				fields: ['speciality'],
+				data: [
+					['Anesthesiology'],
+					['Bariatric Surgery']
+				]
+			}),
+			valueField: 'speciality',
+			displayField: 'speciality'
+		});
+		
 		var date = new Ext.form.DateField({
 			format: this.dateFormat,
 			value: this.date,
@@ -346,7 +363,7 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		});
 		
 		this.add(new Ext.Toolbar({
-			items: [date, '->', startTime, endTime]
+			items: [speciality, '->', date, startTime, endTime]
 		}));
 		this.doLayout();
 	},
