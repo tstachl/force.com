@@ -421,9 +421,18 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 			}
 		});
 		
-		this.add(new Ext.Toolbar({
-			items: [specialty, locations, '->', date, startTime, endTime]
-		}));
+		this.tbar = new Ext.Toolbar({
+			items: ['->', date, startTime, endTime]
+		});
+		
+		if (this.showSpecialty) {
+			this.tbar.insert(0, specialty);
+		}
+		if (this.showLocations) {
+			this.tbar.insert(1, locations);
+		}
+		
+		this.add(this.tbar);
 		this.doLayout();
 	},
 	showMask: function() {
