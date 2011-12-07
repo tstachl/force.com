@@ -94,7 +94,7 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 			object: this.store.object,
 			autoLoad: true,
 			listeners: {
-				load: this.descriptionLoaded,
+				afterload: this.descriptionLoaded,
 				scope: this
 			}
 		});
@@ -310,8 +310,8 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		}
 		return c;
 	},
-	descriptionLoaded: function() {
-		this.specialtyStore.loadData(this.describe.key('fields').key('Specialities__pc').picklistValues);
+	descriptionLoaded: function(desc) {
+		this.specialtyStore.loadData(desc.key('fields').key('Specialities__pc').picklistValues);
 	},
 	createToolbar: function() {
 		this.specialtyStore = new Ext.data.ArrayStore({
