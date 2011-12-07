@@ -214,11 +214,20 @@ Force.data.Describe = Ext.extend(Ext.util.MixedCollection, {
 		}
 	},
 	loaded: function(desc, resp, options) {
-		var json = Ext.decode(resp.responseText);
+		var json = Ext.decode(resp.responseText), value;
 		console.log(json);
 		for (var key in json) {
-			desc.add(key, json[key]);
+			if (key === 'fields') value = this.buildFields(json[key]);
+			else value = json[key]
+			desc.add(key, value);
 		}
+	},
+	buildFields: function(fields) {
+		var temp = new Ext.util.MixedCollection()
+		Ext.each(fields, function(item) {
+			temp.add(item.name, item);
+		});
+		return temp;
 	},
 	exceptionThrown: function(desc, resp, options) {
 		if (this.showAlert) {
