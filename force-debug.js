@@ -200,7 +200,7 @@ Force.data.Describe = Ext.extend(Ext.util.MixedCollection, {
 		if (this.autoLoad) this.load();
 	},
 	load: function() {
-		var request = Ext.Ajax({
+		var request = new Ext.data.Connection({
 		    url: this.url
 		});
 		
