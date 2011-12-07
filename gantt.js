@@ -353,10 +353,12 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		
 		var locations = new Ext.form.ComboBox({
 			typeAhead: true,
+			mode: 'local',
 			emptyText: 'Location',
 			store: new Force.data.Store({
 				object: 'Location__c',
-				fields: ['Id', 'Name']
+				fields: ['Id', 'Name'],
+				autoLaod: true
 			}),
 			valueField: 'Id',
 			displayField: 'Name'
