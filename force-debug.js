@@ -215,7 +215,6 @@ Force.data.Describe = Ext.extend(Ext.util.MixedCollection, {
 	},
 	loaded: function(desc, resp, options) {
 		var json = Ext.decode(resp.responseText), value;
-		console.log(json);
 		for (var key in json) {
 			if (key === 'fields' || key === 'recordTypeInfos') value = this.buildMixedCollection(json[key]);
 			else value = json[key]
