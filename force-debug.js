@@ -221,6 +221,7 @@ Force.data.Describe = Ext.extend(Ext.util.MixedCollection, {
 			else value = json[key]
 			desc.add(key, value);
 		}
+		this.fireEvent('afterload', desc);
 	},
 	buildMixedCollection: function(fields) {
 		var temp = new Ext.util.MixedCollection();
