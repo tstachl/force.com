@@ -23,7 +23,7 @@ Force = {
 };
 
 // Creating the namespaces for Force.data and Force.grid
-Ext.ns('Force.data', 'Force.grid');
+Ext.ns('Force.data', 'Force.grid', 'Force.form');
 
 // Small changes on the Ext.data.JsonWriter
 Force.data.Writer = Ext.extend(Ext.data.JsonWriter, {
@@ -53,6 +53,10 @@ Force.data.Store = Ext.extend(Ext.data.JsonStore, {
 				config.fields.push(item.dataIndex);
 			});
 		}
+		
+		if (Ext.isDefined(config.table)) {
+			config.object = config.table;
+		}
 
 		Ext.apply(config, {
 			restful: true,
@@ -66,15 +70,15 @@ Force.data.Store = Ext.extend(Ext.data.JsonStore, {
 				url: '/services/data/v20.0/query.json',
 				api: {
 					create: {
-						url: '/services/data/v20.0/sobjects/' + config.table + '.json',
+						url: '/services/data/v20.0/sobjects/' + config.object + '.json',
 						method: 'PATCH'
 					},
 					update: {
-						url: '/services/data/v20.0/sobjects/' + config.table + '.json',
+						url: '/services/data/v20.0/sobjects/' + config.object + '.json',
 						method: 'PATCH'
 					},
 					destroy: {
-						url: '/services/data/v20.0/sobjects/' + config.table + '.json',
+						url: '/services/data/v20.0/sobjects/' + config.object + '.json',
 						method: 'DELETE'
 					}
 				}
@@ -109,7 +113,7 @@ Force.data.Store = Ext.extend(Ext.data.JsonStore, {
 		Ext.each(this.fields.keys, function(item, index, all) {
 			q += item + ((index == all.length-1) ? ' ' : ', ');
 		});
-		q += 'FROM ' + this.table;
+		q += 'FROM ' + this.object;
 		return (this.clause) ? q + ' ' + this.clause : q;
 	},
 	execute : function(action, rs, options, /* private */ batch) {
@@ -173,6 +177,38 @@ Force.data.Store = Ext.extend(Ext.data.JsonStore, {
 	}
 });
 
+Force.data.Describe = Ext.extend(Ext.util.MixedCollection, {
+	showAlert: true,
+	constructor: function(config) {
+		if (Ext.isDefined(config.table)) {
+			config.object = config.table;
+		}
+		
+		Ext.apply(config, {
+			url: '/services/data/v20.0/sobjects/' + config.object + '.json'
+		});
+		
+		Force.data.Describe.superclass.constructor.call(this, config);
+
+		this.addListener('exception', this.exceptionThrown, this);
+	},
+	load: function() {
+		Ext.Ajax.request({
+		    url: this.url,
+		    success: this.loaded
+		});
+	},
+	loaded: function() {
+		console.log(arguments);
+	},
+	exceptionThrown: function(pr, type, action, conn, resp) {
+		if (this.showAlert) {
+			var msgs = Ext.decode(resp.responseText);
+			Ext.Msg.alert(resp.status + ' ' + resp.statusText, msgs[0].message);
+		}
+	}
+});
+
 // Add the createStore function to the standard GridPanel
 Ext.override(Ext.grid.GridPanel, {
 	constructor: function(config) {
@@ -182,14 +218,14 @@ Ext.override(Ext.grid.GridPanel, {
 	createStore: function(config) {
 		console.log('Hello');
 		if (!Ext.isDefined(config.store) && Ext.isDefined(config.colModel)
-		&& Ext.isDefined(config.colModel.columns) && Ext.isDefined(config.table)) {
+		&& Ext.isDefined(config.colModel.columns) && (Ext.isDefined(config.object) || Ext.isDefined(config.table))) {
 			var fields = [];
 			Ext.each(config.colModel.columns, function(item, index, all) {
 				fields.push(item.dataIndex);
 			});
 			config.store = new Force.data.Store({
 				autoDestroy: true,
-				table: config.table,
+				object: config.object || config.table,
 				fields: fields
 			});
 			config.store.load();
