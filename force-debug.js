@@ -189,7 +189,7 @@ Force.data.Describe = Ext.extend(Ext.util.MixedCollection, {
 		});
 		
 		Force.data.Describe.superclass.constructor.call(this, config);
-
+		console.log(config, this);
 		this.addListener('exception', this.exceptionThrown, this);
 	},
 	load: function() {
