@@ -91,7 +91,7 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 	loadMask: !0,
 	initComponent : function() {
 		this.describe = new Force.data.Describe({
-			object: this.object,
+			object: this.store.object,
 			autoLoad: true
 		});
 		
