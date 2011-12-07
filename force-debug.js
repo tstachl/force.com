@@ -186,7 +186,7 @@ Force.data.Describe = Ext.extend(Ext.util.MixedCollection, {
 		
 		Ext.apply(this, config, {
 			autoLoad: false,
-			url: '/services/data/v20.0/sobjects/' + config.object + '.json'
+			url: '/services/data/v20.0/sobjects/' + config.object + '/describe.json'
 		});
 		
 		Force.data.Describe.superclass.constructor.call(this, config);
