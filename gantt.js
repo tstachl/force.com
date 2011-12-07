@@ -92,7 +92,11 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 	initComponent : function() {
 		this.describe = new Force.data.Describe({
 			object: this.store.object,
-			autoLoad: true
+			autoLoad: true,
+			listeners: {
+				load: this.descriptionLoaded,
+				scope: this
+			}
 		});
 		
 		if(null === this.startTime)
@@ -306,18 +310,21 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		}
 		return c;
 	},
+	descriptionLoaded: function() {
+		this.specialtyStore.loadData(this.describe.key('fields').key('Specialities__pc').picklistValues);
+	},
 	createToolbar: function() {
+		this.specialtyStore = new Ext.data.ArrayStore({
+			id: 4,
+			fields: ['active', 'defaultValue', 'label', 'validFor', 'value']
+		});
 		var specialty = new Ext.form.ComboBox({
 			typeAhead: true,
 			triggerAction: 'all',
 			lazyRender: true,
 			mode: 'local',
 			emptyText: 'Specialty',
-			store: new Ext.data.ArrayStore({
-				id: 4,
-				fields: ['active', 'defaultValue', 'label', 'validFor', 'value'],
-				data: this.describe.key('fields').key('Specialities__pc').picklistValues
-			}),
+			store: this.specialtyStore,
 			valueField: 'value',
 			displayField: 'label'
 		});
