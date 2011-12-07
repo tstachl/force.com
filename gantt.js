@@ -313,9 +313,9 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		return c;
 	},
 	descriptionLoaded: function(desc) {
-		console.log(desc.key('fields').key('Specialities__pc').picklistValues);
-		this.specialtyStore.loadData({specialty: desc.key('fields').key('Specialities__pc').picklistValues });
-		console.log(this.specialtyStore);
+		if (this.showSpecialty) {
+			this.specialtyStore.loadData({specialty: desc.key('fields').key('Specialities__pc').picklistValues });
+		}
 	},
 	userQueryClause: function() {
 		var clause = this.originalClause;
