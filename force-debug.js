@@ -200,33 +200,24 @@ Force.data.Describe = Ext.extend(Ext.util.MixedCollection, {
 		if (this.autoLoad) this.load();
 	},
 	load: function() {
-		var request = new Ext.data.Connection({
-		    url: this.url
-		});
-		
-		request.on({
-			beforerequest: this.beforeRequest,
-			requestcomplete: this.requestComplete,
-			requestexception: this.requestException,
+		Ext.Ajax.request({
+			url: this.url,
+			callback: this.requestCallback,
 			scope: this
 		});
-		
-		request.request();
 	},
-	beforeRequest: function(conn, options) {
-		this.fireEvent('beforeload', this, conn, options);
+	requestCallback: function(options, success, resp) {
+		if (success) {
+			this.fireEvent('load', this, resp, options);
+		} else {
+			this.fireEvent('exception', this, resp, options);
+		}
 	},
-	requestComplete: function(conn, resp, options) {
-		this.fireEvent('load', this, resp, conn, options);
-	},
-	requestException: function(conn, resp, options) {
-		this.fireEvent('exception', this, resp, conn, options);
-	},
-	loaded: function(desc, resp, conn, options) {
+	loaded: function(desc, resp, options) {
 		var desc = Ext.decode(resp.responseText);
 		console.log(desc);
 	},
-	exceptionThrown: function(desc, resp, conn, options) {
+	exceptionThrown: function(desc, resp, options) {
 		if (this.showAlert) {
 			var msgs = Ext.decode(resp.responseText);
 			Ext.Msg.alert(resp.status + ' ' + resp.statusText, Ext.isDefined(msgs[0]) && Ext.isDefined(msgs[0].message) ? msgs[0].message : '');
