@@ -311,7 +311,9 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		return c;
 	},
 	descriptionLoaded: function(desc) {
+		console.log(desc.key('fields').key('Specialities__pc').picklistValues);
 		this.specialtyStore.loadData(desc.key('fields').key('Specialities__pc').picklistValues);
+		console.log(this.specialtyStore);
 	},
 	createToolbar: function() {
 		this.specialtyStore = new Ext.data.ArrayStore({
