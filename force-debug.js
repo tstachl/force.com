@@ -184,7 +184,7 @@ Force.data.Describe = Ext.extend(Ext.util.MixedCollection, {
 			config.object = config.table;
 		}
 		
-		Ext.apply(config, {
+		Ext.apply(this, config, {
 			url: '/services/data/v20.0/sobjects/' + config.object + '.json'
 		});
 		
