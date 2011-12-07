@@ -238,7 +238,7 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		c = c.substr(0, c.length - 4) + ") AND IsPrivate=false AND IsDeleted=false";
 		this.eventStore = new Force.data.Store({
 			table : "event",
-			fields : ["Id", "IsAllDayEvent", "OwnerId", "EndDateTime", "Location", "StartDateTime", "Subject", "DurationInMinutes"],
+			fields : ["Id", "IsAllDayEvent", "OwnerId", "WhatId", "EndDateTime", "Location", "StartDateTime", "Subject", "DurationInMinutes"],
 			clause : c
 		});
 		new Ext.LoadMask(this.getEl(), {msg:'Please wait ...',store:this.eventStore});
