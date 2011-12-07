@@ -334,6 +334,12 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 			root: 'specialty',
 			fields: ['active', 'defaultValue', 'label', 'validFor', 'value']
 		});
+		
+		this.locationStore = new Force.data.Store({
+			object: 'Location__c',
+			fields: ['Id', 'Name']
+		});
+		
 		var specialty = new Ext.form.ComboBox({
 			typeAhead: true,
 			lazyRender: true,
@@ -353,13 +359,8 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		
 		var locations = new Ext.form.ComboBox({
 			typeAhead: true,
-			mode: 'local',
 			emptyText: 'Location',
-			store: new Force.data.Store({
-				object: 'Location__c',
-				fields: ['Id', 'Name'],
-				autoLaod: true
-			}),
+			store: this.locationStore,
 			valueField: 'Id',
 			displayField: 'Name'
 		});
