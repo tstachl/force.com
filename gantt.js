@@ -323,7 +323,6 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 	userQueryClause: function() {
 		var clause = this.originalClause;
 		if (this.specialty) {
-			console.log(this.specialty);
 			clause += " AND Specialities__pc includes ('" + this.specialty + "')";
 		}
 		this.store.clause = clause;
@@ -347,7 +346,7 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 			listeners: {
 				scope: this,
 				select: function(field, data) {
-					this.setSpecialty(data);
+					this.setSpecialty(data.get('value'));
 					this.userQueryClause();
 				}
 			}
