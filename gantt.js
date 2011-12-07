@@ -99,6 +99,8 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 			}
 		});
 		
+		this.originalClause = this.store.clause;
+		
 		if(null === this.startTime)
 			this.startTime = new Date, this.startTime.setHours(8), this.startTime.setMinutes(0)
 		if(null === this.endTime)
@@ -139,6 +141,10 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 			this.date = Date.parseDate(s, this.dateFormat);
 		else
 			this.date = s;
+	},
+	setSpecialty: function(s) {
+		this.specialty = s;
+		this.fireEvent('specialtychange', this, s);
 	},
 	onRender : function() {Force.cmp.GanttPanel.superclass.onRender.apply(this, arguments);
 		this.getGridEl();
@@ -255,8 +261,7 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		this.eventStore.load()
 	},
 	refreshEvents : function() {
-		Ext.each(this.events, function(c) {c.destroy()
-		});
+		Ext.each(this.events, function(c) {c.destroy()});
 		if (typeof this.eventStore != 'undefined')
 			this.eventStore.each(function(c) {this.createEvent(c)}, this);
 		this.hideMask();
@@ -315,6 +320,14 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		this.specialtyStore.loadData({specialty: desc.key('fields').key('Specialities__pc').picklistValues });
 		console.log(this.specialtyStore);
 	},
+	userQueryClause: function() {
+		var clause = this.originalClause;
+		if (this.specialty) {
+			clause += " AND Specialities__pc = '" + this.specialty + "'";
+		}
+		this.store.clause = clause;
+		this.store.load();
+	},
 	createToolbar: function() {
 		this.specialtyStore = new Ext.data.JsonStore({
 			idProperty: 'value',
@@ -329,7 +342,14 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 			emptyText: 'Specialty',
 			store: this.specialtyStore,
 			valueField: 'value',
-			displayField: 'label'
+			displayField: 'label',
+			listeners: {
+				scope: this,
+				select: function(field, data) {
+					this.setSpecialty(data);
+					this.userQueryClause();
+				}
+			}
 		});
 		
 		var date = new Ext.form.DateField({
