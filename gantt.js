@@ -312,12 +312,13 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 	},
 	descriptionLoaded: function(desc) {
 		console.log(desc.key('fields').key('Specialities__pc').picklistValues);
-		this.specialtyStore.loadData(desc.key('fields').key('Specialities__pc').picklistValues);
+		this.specialtyStore.loadData({specialty: desc.key('fields').key('Specialities__pc').picklistValues });
 		console.log(this.specialtyStore);
 	},
 	createToolbar: function() {
-		this.specialtyStore = new Ext.data.ArrayStore({
-			id: 4,
+		this.specialtyStore = new Ext.data.JsonStore({
+			idProperty: 'value',
+			root: 'specialty',
 			fields: ['active', 'defaultValue', 'label', 'validFor', 'value']
 		});
 		var specialty = new Ext.form.ComboBox({
