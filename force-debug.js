@@ -166,7 +166,7 @@ Force.data.Store = Ext.extend(Ext.data.JsonStore, {
 	exceptionThrown: function(pr, type, action, conn, resp) {
 		if (this.showAlert) {
 			var msgs = Ext.decode(resp.responseText);
-			Ext.Msg.alert(resp.status + ' ' + resp.statusText, msgs[0].message);
+			Ext.Msg.alert(resp.status + ' ' + resp.statusText, Ext.isDefined(msgs[0]) && Ext.isDefined(msgs[0].message) ? msgs[0].message : '');
 		}
 	},
 	getColModel: function() {
@@ -185,26 +185,51 @@ Force.data.Describe = Ext.extend(Ext.util.MixedCollection, {
 		}
 		
 		Ext.apply(this, config, {
+			autoLoad: false,
 			url: '/services/data/v20.0/sobjects/' + config.object + '.json'
 		});
 		
 		Force.data.Describe.superclass.constructor.call(this, config);
-		console.log(config, this);
-		this.addListener('exception', this.exceptionThrown, this);
+		
+		this.on({
+			exception: this.exceptionThrown,
+			load: this.loaded,
+			scope: this
+		});
+		
+		if (this.autoLoad) this.load();
 	},
 	load: function() {
-		Ext.Ajax.request({
-		    url: this.url,
-		    success: this.loaded
+		var request = Ext.Ajax({
+		    url: this.url
 		});
+		
+		request.on({
+			beforerequest: this.beforeRequest,
+			requestcomplete: this.requestComplete,
+			requestexception: this.requestException,
+			scope: this
+		});
+		
+		request.request();
 	},
-	loaded: function() {
-		console.log(arguments);
+	beforeRequest: function(conn, options) {
+		this.fireEvent('beforeload', this, conn, options);
 	},
-	exceptionThrown: function(pr, type, action, conn, resp) {
+	requestComplete: function(conn, resp, options) {
+		this.fireEvent('load', this, resp, conn, options);
+	},
+	requestException: function(conn, resp, options) {
+		this.fireEvent('exception', this, resp, conn, options);
+	},
+	loaded: function(desc, resp, conn, options) {
+		var desc = Ext.decode(resp.responseText);
+		console.log(desc);
+	},
+	exceptionThrown: function(desc, resp, conn, options) {
 		if (this.showAlert) {
 			var msgs = Ext.decode(resp.responseText);
-			Ext.Msg.alert(resp.status + ' ' + resp.statusText, msgs[0].message);
+			Ext.Msg.alert(resp.status + ' ' + resp.statusText, Ext.isDefined(msgs[0]) && Ext.isDefined(msgs[0].message) ? msgs[0].message : '');
 		}
 	}
 });
