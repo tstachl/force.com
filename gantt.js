@@ -254,10 +254,9 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 	},
 	createEvent : function(c) {
 		if(Date.parseDate(c.get("StartDateTime"), Force.serverDateFormat) < this.endTime) {
-			var d = this.store.indexOfId(c.get("WhatId"));
-			console.log(d);
-			var e = Ext.get(this.getView().getRow(d));
-			console.log(e);
+			var d = this.store.indexOfId(c.get("WhatId")),
+			    e = Ext.get(this.getView().getRow(d));
+			console.log(d, e, c.get("WhatId"));
 			var a = e.getHeight(),
 			    e = "-" + e.getHeight() + "px",
 			    k = Ext.get(this.getView().getCell(d,0)).getComputedWidth(),
