@@ -264,7 +264,7 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		this.hideMask();
 	},
 	createEvent : function(c) {
-		console.log('createEvent', c, Date.parseDate(c.get("StartDateTime"), Force.serverDateFormat) < this.endTime, Date.parseDate(c.get("StartDateTime"), Force.serverDateFormat), this.endTime);
+		console.log('createEvent', c, Date.parseDate(c.get("StartDateTime"), Force.serverDateFormat) < this.endTime, parseInt(Date.parseDate(c.get("StartDateTime"), Force.serverDateFormat)), parseInt(this.endTime));
 		if(Date.parseDate(c.get("StartDateTime"), Force.serverDateFormat) < this.endTime) {
 			var d = this.store.indexOfId(c.get("WhoId")),
 			    e = Ext.get(this.getView().getRow(d));
