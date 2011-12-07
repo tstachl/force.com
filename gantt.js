@@ -250,7 +250,7 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		c = c.substr(0, c.length - 4) + ") AND IsPrivate=false AND IsDeleted=false";
 		this.eventStore = new Force.data.Store({
 			table : "event",
-			fields : ["Id", "IsAllDayEvent", "OwnerId", "WhatId", "EndDateTime", "Location", "StartDateTime", "Subject", "DurationInMinutes"],
+			fields : ["Id", "IsAllDayEvent", "OwnerId", "WhatId", "WhoId", "EndDateTime", "Location", "StartDateTime", "Subject", "DurationInMinutes"],
 			clause : c
 		});
 		new Ext.LoadMask(this.getEl(), {msg:'Please wait ...',store:this.eventStore});
@@ -264,7 +264,6 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		this.hideMask();
 	},
 	createEvent : function(c) {
-		console.log('createEvent', c, Date.parseDate(c.get("StartDateTime"), Force.serverDateFormat) < this.endTime, Date.parseDate(c.get("StartDateTime"), Force.serverDateFormat).getTime(), this.endTime.getTime());
 		if(Date.parseDate(c.get("StartDateTime"), Force.serverDateFormat) < this.endTime) {
 			var d = this.store.indexOfId(c.get("WhoId")),
 			    e = Ext.get(this.getView().getRow(d));
