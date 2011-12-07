@@ -144,7 +144,6 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 	},
 	setSpecialty: function(s) {
 		this.specialty = s;
-		this.fireEvent('specialtychange', this, s);
 	},
 	onRender : function() {Force.cmp.GanttPanel.superclass.onRender.apply(this, arguments);
 		this.getGridEl();
@@ -245,6 +244,7 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		delete this.currentCell;
 	},
 	refreshEventStore : function() {
+		if (this.store.getCount() === 0) return false;
 		this.showMask();
 		var c = "WHERE ActivityDate=" + Force.formatDate(this.date, "Y-m-d") + " AND (";
 		this.store.each(function(d) {
