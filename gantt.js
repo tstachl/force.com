@@ -329,50 +329,54 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		this.store.load();
 	},
 	createToolbar: function() {
-		this.specialtyStore = new Ext.data.JsonStore({
-			idProperty: 'value',
-			root: 'specialty',
-			fields: ['active', 'defaultValue', 'label', 'validFor', 'value']
-		});
-		
-		this.locationStore = new Force.data.Store({
-			object: 'Location__c',
-			fields: ['Id', 'Name']
-		});
-		
-		var specialty = new Ext.form.ComboBox({
-			typeAhead: true,
-			lazyRender: true,
-			mode: 'local',
-			emptyText: 'Specialty',
-			store: this.specialtyStore,
-			valueField: 'value',
-			displayField: 'label',
-			listeners: {
-				scope: this,
-				select: function(cb, data) {
-					this.specialty = data.get('value');
-					this.userQueryClause();
+		if (this.showSpecialty) {
+			this.specialtyStore = new Ext.data.JsonStore({
+				idProperty: 'value',
+				root: 'specialty',
+				fields: ['active', 'defaultValue', 'label', 'validFor', 'value']
+			});
+			
+			var specialty = new Ext.form.ComboBox({
+				typeAhead: true,
+				lazyRender: true,
+				mode: 'local',
+				emptyText: 'Specialty',
+				store: this.specialtyStore,
+				valueField: 'value',
+				displayField: 'label',
+				listeners: {
+					scope: this,
+					select: function(cb, data) {
+						this.specialty = data.get('value');
+						this.userQueryClause();
+					}
 				}
-			}
-		});
+			});
+		}
 		
-		var locations = new Ext.form.ComboBox({
-			typeAhead: true,
-			lazyRender: true,
-			triggerAction: 'all',
-			emptyText: 'Location',
-			store: this.locationStore,
-			valueField: 'Id',
-			displayField: 'Name',
-			listeners: {
-				scope: this,
-				select: function(cb, data) {
-					this.location = data.get('Id');
-					this.userQueryClause();
+		if (this.showLocations) {
+			this.locationStore = new Force.data.Store({
+				object: 'Location__c',
+				fields: ['Id', 'Name']
+			});
+			
+			var locations = new Ext.form.ComboBox({
+				typeAhead: true,
+				lazyRender: true,
+				triggerAction: 'all',
+				emptyText: 'Location',
+				store: this.locationStore,
+				valueField: 'Id',
+				displayField: 'Name',
+				listeners: {
+					scope: this,
+					select: function(cb, data) {
+						this.location = data.get('Id');
+						this.userQueryClause();
+					}
 				}
-			}
-		});
+			});
+		}
 		
 		var date = new Ext.form.DateField({
 			format: this.dateFormat,
