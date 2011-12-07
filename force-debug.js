@@ -217,15 +217,22 @@ Force.data.Describe = Ext.extend(Ext.util.MixedCollection, {
 		var json = Ext.decode(resp.responseText), value;
 		console.log(json);
 		for (var key in json) {
-			if (key === 'fields') value = this.buildFields(json[key]);
+			if (key === 'fields' || key === 'recordTypeInfos') value = this.buildMixedCollection(json[key]);
 			else value = json[key]
 			desc.add(key, value);
 		}
 	},
-	buildFields: function(fields) {
-		var temp = new Ext.util.MixedCollection()
+	buildMixedCollection: function(fields) {
+		var temp = new Ext.util.MixedCollection();
 		Ext.each(fields, function(item) {
 			temp.add(item.name, item);
+		});
+		return temp;
+	},
+	buildRelationships: function(rel) {
+		var temp = new Ext.util.MixedCollection();
+		Ext.each(rel, function(item) {
+			temp.add(item.relationshipName || 'Parent', item);
 		});
 		return temp;
 	},
