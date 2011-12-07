@@ -90,6 +90,11 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 	trackMouseOver : !1,
 	loadMask: !0,
 	initComponent : function() {
+		this.describe = new Force.data.Describe({
+			object: this.object,
+			autoLoad: true
+		});
+		
 		if(null === this.startTime)
 			this.startTime = new Date, this.startTime.setHours(8), this.startTime.setMinutes(0)
 		if(null === this.endTime)
@@ -309,15 +314,12 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 			mode: 'local',
 			emptyText: 'Specialty',
 			store: new Ext.data.ArrayStore({
-				id: 0,
-				fields: ['specialty'],
-				data: [
-					['Anesthesiology'],
-					['Bariatric Surgery']
-				]
+				id: 4,
+				fields: ['active', 'defaultValue', 'label', 'validFor', 'value'],
+				data: this.describe.key('fields').key('Specialities__pc').picklistValues
 			}),
-			valueField: 'specialty',
-			displayField: 'specialty'
+			valueField: 'value',
+			displayField: 'label'
 		});
 		
 		var date = new Ext.form.DateField({
