@@ -219,25 +219,46 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 	onCellOver : function(c, d, e, a) {
 		if(this.showUserHover && c === 0) {a.stopPropagation();
 			var k = Ext.get("HoverElement_" + e.get("Id"));
-			k || (Ext.DomHelper.append(Ext.getBody().select("td.oRight").first(), {
-				id : "HoverElement_" + e.get("Id"),
-				tag : "div",
-				cls : "individualPalette lookupHoverDetail lookupHoverDetailOverridable",
-				children : [{
+			if (!k) {
+				Ext.DomHelper.append(Ext.getBody().select("td.oRight").first(), {
+					id : "HoverElement_" + e.get("Id"),
 					tag : "div",
-					cls : "userProfileHoverUserBlock setupBlock topLeft",
-					id : "HoverElement_" + e.get("Id") + "_Content"
-				}]
-			}), k = Ext.get("HoverElement_" + e.get("Id")), Ext.Ajax.request({
-				url : "/" + e.get("Id") + "/m",
-				success : function(a) {k.select(".userProfileHoverUserBlock").first().insertHtml("afterBegin", a.responseText)
-				},
-				params : {
-					isAjaxRequest : 1
-				},
-				method : "GET"
-			}));
-			k.setXY([Ext.EventObject.getPageX(),Ext.EventObject.getPageY()-10]).setPositioning({"z-index":20}).show()
+					cls : "individualPalette lookupHoverDetail lookupHoverDetailOverridable",
+					children : [{
+						tag : "div",
+						cls : "userProfileHoverUserBlock setupBlock topLeft",
+						id : "HoverElement_" + e.get("Id") + "_Content"
+					}]
+				});
+				k = Ext.get("HoverElement_" + e.get("Id"));
+				k.on({
+					mouseover: function() {
+						if (k.timer) {
+							k.timer.cancel();
+						}
+					},
+					mouseleave: function() {
+						k.setPositioning({"z-index":15});
+						if (!k.timer) {
+							k.timer = new Ext.util.DelayedTask(function() {d.setXY([-1E3,-1E3]).hide()});
+						}
+						k.timer.delay(500);
+					}
+				});
+				Ext.Ajax.request({
+					url : "/" + e.get("Id") + "/m",
+					success : function(a) {k.select(".userProfileHoverUserBlock").first().insertHtml("afterBegin", a.responseText)
+					},
+					params : {
+						isAjaxRequest : 1
+					},
+					method : "GET"
+				});
+			}
+			k.setXY([Ext.EventObject.getPageX(),Ext.EventObject.getPageY()-10]).setPositioning({"z-index":20}).show();
+			if (k.timer) {
+				k.timer.cancel();
+			}
 		}
 		
 		if (c !== 0) {
@@ -253,7 +274,10 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 			var a = Ext.get("HoverElement_"+e.get("Id")).setPositioning({
 				"z-index" : 15
 			});
-			a.timer = (new Ext.util.DelayedTask(function(){a.setXY([-1E3,-1E3]).hide()})).delay(300)
+			if (!a.timer) {
+				a.timer = new Ext.util.DelayedTask(function(){a.setXY([-1E3,-1E3]).hide()})
+			}
+			a.timer.delay(500)
 		}
 		
 		if(this.currentCell){
