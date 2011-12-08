@@ -47,6 +47,7 @@ Force.cmp.GanttEvent = Ext.extend(Ext.BoxComponent, {
 						d = Ext.get("HoverElement_" + this.rec.get("Id"));
 						d.on({
 							mouseover: function() {
+								console.log(d.timer);
 								if (d.timer) {
 									console.log('event cancel timer');
 									d.timer.cancel();
@@ -72,6 +73,7 @@ Force.cmp.GanttEvent = Ext.extend(Ext.BoxComponent, {
 						});
 						d.setXY(Ext.EventObject.getXY()).setPositioning({"z-index":20}).show()
 					}
+					console.log(d.timer);
 					if (d.timer) {
 						console.log('cancel timer');
 						d.timer.cancel();
