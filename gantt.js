@@ -245,7 +245,7 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 		this.showMask();
 		var c = "WHERE ActivityDate=" + Force.formatDate(this.date, "Y-m-d") + " AND (";
 		this.store.each(function(d) {
-			c += "WhoId='" + d.get("PersonContactId") + "' OR "
+			c += "WhoId='" + d.get("Id") + "' OR "
 		});
 		c = c.substr(0, c.length - 4) + ") AND IsPrivate=false AND IsDeleted=false";
 		this.eventStore = new Force.data.Store({
