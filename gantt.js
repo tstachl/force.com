@@ -10,6 +10,7 @@ Force.cmp.GanttEvent = Ext.extend(Ext.BoxComponent, {
 		cls : "force-gantt-event"
 	},
 	hover : null,
+	hoverTimeout: null,
 	initComponent : function() {
 		var c = Date.parseDate(this.rec.get("StartDateTime"), Force.serverDateFormat);
 		this.startHour = c.getHours();
@@ -25,38 +26,43 @@ Force.cmp.GanttEvent = Ext.extend(Ext.BoxComponent, {
 		if(this.showEventHover)
 			this.getEl().on({
 				mouseenter : function(c) {c.stopPropagation();
-					var d = Ext.get("HoverElement_" + this.rec.get("Id"));
-					d || (Ext.DomHelper.append(Ext.getBody().select("td.oRight").first(), {
-						id : "HoverElement_" + this.rec.get("Id"),
-						tag : "div",
-						cls : "hoverDetail eventBusy",
-						children : [{
+					var d = this.hover
+					if (!d) {
+						Ext.DomHelper.append(Ext.getBody().select("td.oRight").first(), {
+							id : "HoverElement_" + this.rec.get("Id"),
 							tag : "div",
-							cls : "hoverOuter",
+							cls : "hoverDetail eventBusy",
 							children : [{
 								tag : "div",
-								cls : "hoverInner",
+								cls : "hoverOuter",
 								children : [{
 									tag : "div",
-									cls : "hoverContent",
-									id : "HoverElement_" + this.rec.get("Id") + "_Content"
+									cls : "hoverInner",
+									children : [{
+										tag : "div",
+										cls : "hoverContent",
+										id : "HoverElement_" + this.rec.get("Id") + "_Content"
+									}]
 								}]
 							}]
-						}]
-					}), d = Ext.get("HoverElement_" + this.rec.get("Id")), Ext.Ajax.request({
-						url : "/ui/core/activity/EventHoverPage",
-						success : function(c) {d.select(".hoverContent").first().insertHtml("afterBegin", c.responseText)
-						},
-						params : {
-							id : this.rec.get("Id"),
-							Subject : this.rec.get("Subject"),
-							Location : this.rec.get("Location"),
-							Start : this.rec.get("StartDateTime"),
-							End : this.rec.get("EndDateTime")
-						},
-						method : "GET"
-					}));
-					d.setXY(Ext.EventObject.getXY()).setPositioning({"z-index":20}).show()
+						});
+						d = Ext.get("HoverElement_" + this.rec.get("Id"));
+						Ext.Ajax.request({
+							url : "/ui/core/activity/EventHoverPage",
+							success : function(c) {d.select(".hoverContent").first().insertHtml("afterBegin", c.responseText)
+							},
+							params : {
+								id : this.rec.get("Id"),
+								Subject : this.rec.get("Subject"),
+								Location : this.rec.get("Location"),
+								Start : this.rec.get("StartDateTime"),
+								End : this.rec.get("EndDateTime")
+							},
+							method : "GET"
+						});
+						d.setXY(Ext.EventObject.getXY()).setPositioning({"z-index":20}).show()
+					}
+					if (d.timer) d.timer.cancel();
 				},
 				mouseleave : function() {
 					var c = Ext.get("HoverElement_"+this.rec.get("Id")).setPositioning({
