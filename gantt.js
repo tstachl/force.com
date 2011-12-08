@@ -55,6 +55,7 @@ Force.cmp.GanttEvent = Ext.extend(Ext.BoxComponent, {
 							},
 							mouseleave: function() {
 								console.log('event create timer');
+								d.setPositioning({"z-index":15});
 								if (!d.timer) {
 									d.timer = new Ext.util.DelayedTask(function() {d.setXY([-1E3,-1E3]).hide()});
 								}
@@ -74,8 +75,8 @@ Force.cmp.GanttEvent = Ext.extend(Ext.BoxComponent, {
 							},
 							method : "GET"
 						});
-						d.setXY(Ext.EventObject.getXY()).setPositioning({"z-index":20}).show()
 					}
+					d.setXY(Ext.EventObject.getXY()).setPositioning({"z-index":20}).show()
 					console.log(d.timer);
 					if (d.timer) {
 						console.log('cancel timer');
@@ -83,9 +84,7 @@ Force.cmp.GanttEvent = Ext.extend(Ext.BoxComponent, {
 					}
 				},
 				mouseleave : function() {
-					var c = Ext.get("HoverElement_"+this.rec.get("Id")).setPositioning({
-						"z-index" : 15
-					});
+					var c = Ext.get("HoverElement_"+this.rec.get("Id")).setPositioning({"z-index":15});
 					if (!c.timer) {
 						c.timer = new Ext.util.DelayedTask(function(){c.setXY([-1E3,-1E3]).hide()});
 					}
