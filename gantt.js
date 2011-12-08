@@ -55,7 +55,10 @@ Force.cmp.GanttEvent = Ext.extend(Ext.BoxComponent, {
 							},
 							mouseleave: function() {
 								console.log('event create timer');
-								d.timer = (new Ext.util.DelayedTask(function() {d.setXY([-1E3,-1E3]).hide()})).delay(300);
+								if (!d.timer) {
+									d.timer = new Ext.util.DelayedTask(function() {d.setXY([-1E3,-1E3]).hide()});
+								}
+								d.timer.delay(500);
 							}
 						});
 						Ext.Ajax.request({
@@ -83,8 +86,10 @@ Force.cmp.GanttEvent = Ext.extend(Ext.BoxComponent, {
 					var c = Ext.get("HoverElement_"+this.rec.get("Id")).setPositioning({
 						"z-index" : 15
 					});
-					console.log('create timer');
-					c.timer = (new Ext.util.DelayedTask(function(){c.setXY([-1E3,-1E3]).hide()})).delay(300)
+					if (!c.timer) {
+						c.timer = new Ext.util.DelayedTask(function(){c.setXY([-1E3,-1E3]).hide()});
+					}
+					c.timer.delay(500)
 				},
 				click : function() {
 					window.location.href = "/" + this.rec.get("Id")
