@@ -9,8 +9,6 @@ Force.cmp.GanttEvent = Ext.extend(Ext.BoxComponent, {
 		tag : "div",
 		cls : "force-gantt-event"
 	},
-	hover : null,
-	hoverTimeout: null,
 	initComponent : function() {
 		var c = Date.parseDate(this.rec.get("StartDateTime"), Force.serverDateFormat);
 		this.startHour = c.getHours();
@@ -26,7 +24,7 @@ Force.cmp.GanttEvent = Ext.extend(Ext.BoxComponent, {
 		if(this.showEventHover)
 			this.getEl().on({
 				mouseenter : function(c) {c.stopPropagation();
-					var d = this.hover
+					var d = Ext.get("HoverElement_" + this.rec.get("Id"));
 					if (!d) {
 						Ext.DomHelper.append(Ext.getBody().select("td.oRight").first(), {
 							id : "HoverElement_" + this.rec.get("Id"),
