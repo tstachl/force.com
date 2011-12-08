@@ -320,10 +320,10 @@ Force.cmp.GanttPanel = Ext.extend(Ext.grid.GridPanel, {
 	userQueryClause: function() {
 		var clause = this.originalClause;
 		if (this.specialty) {
-			clause += " AND Specialities__pc includes ('" + this.specialty + "')";
+			clause += " AND Specialities__c includes ('" + this.specialty + "')";
 		}
 		if (this.location) {
-			clause += " AND PersonContactId IN (SELECT Contact__c FROM DoctorLocationAssociation__c WHERE Location__c = '" + this.location + "')"; 
+			clause += " AND Id IN (SELECT Contact__c FROM DoctorLocationAssociation__c WHERE Location__c = '" + this.location + "')"; 
 		}
 		this.store.clause = clause;
 		this.store.load();
