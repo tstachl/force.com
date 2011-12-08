@@ -47,6 +47,15 @@ Force.cmp.GanttEvent = Ext.extend(Ext.BoxComponent, {
 							}]
 						});
 						d = Ext.get("HoverElement_" + this.rec.get("Id"));
+						d.on({
+							mouseover: function() {
+								if (d.timer) d.timer.cancel();
+							},
+							mouseleave: function() {
+								d.setPositioning({'z-index':15});
+								d.timer = (new Ext.util.DelayedTask(function() {d.setXY([-1E3,-1E3]).hide()})).delay(300);
+							}
+						});
 						Ext.Ajax.request({
 							url : "/ui/core/activity/EventHoverPage",
 							success : function(c) {d.select(".hoverContent").first().insertHtml("afterBegin", c.responseText)
